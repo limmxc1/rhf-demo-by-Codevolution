@@ -5,9 +5,7 @@ export const YoutubeForm = () => {
 
 	const form = useForm()
 	const { register, control, handleSubmit, formState } = form 
-	// formState contains numerous about the form's state, including those shown in rhf-dev-tools
 	const { errors } = formState
-	// console.log(errors) // returns an object whose properties depends on number of inputs with validation error
 	const onSubmit = (data) => {
 		console.log('Form submitted', data) 
 	}
@@ -28,7 +26,7 @@ export const YoutubeForm = () => {
 							},
 						})} 
 					></input>
-					<p className="error">{errors.username?.message}</p> {/* '?' indicates optional chaining, if errors.username is true */}
+					<p className="error">{errors.username?.message}</p>
 				</div>
 				<div className='form-control'>
 					<label htmlFor="email">E-mail</label>
@@ -40,6 +38,20 @@ export const YoutubeForm = () => {
 								value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, 
 								message: 'Invalid email format',
 							},
+							validate: { // enables writing of custom validation
+								notAdmin: (fieldValue) => { // automatically receives 'fieldValue' as the argument
+									return (
+										fieldValue !== 'admin@example' ||
+										"Enter a different email address"
+									);
+								},
+								notBlackListed: (fieldValue) => { // automatically receives 'fieldValue' as the argument
+									return (
+										!fieldValue.endsWith('baddomain.com') || 
+										"This domain is not supported"
+									)
+								}
+							} // 1 custom rule = pass function, >1 custom rule = pass object
 						})}
 					></input>
 					<p className="error">{errors.email?.message}</p>
