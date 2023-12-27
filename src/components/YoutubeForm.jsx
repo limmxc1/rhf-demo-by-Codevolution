@@ -1,12 +1,11 @@
-import React from 'react';
 import { useForm } from 'react-hook-form'
+import { DevTool } from '@hookform/devtools';
 
 export const YoutubeForm = () => {
 	
-	const form = useForm() // returns a form object with many properties
-	const { register } = form
-	// const { name, ref, onChange, onBlur }  = register("username") // returns 4 methods that we need to hook into form contro
-	
+	const form = useForm()
+	const { register, control } = form // destructure the control method and pass it to <DevTool>
+
 	return (
 		<div>
 			<form>
@@ -14,11 +13,7 @@ export const YoutubeForm = () => {
 				<input
 					type="text"
 					id="username"
-					// name={name}
-					// ref={ref}
-					// onChange={onChange}
-					// onBlur={onBlur}
-					{...register("username")} // instead of the 4 props above, we can just spread 'register'
+					{...register("username")}
 				></input>
 				<label htmlFor="email">E-mail</label>
 				<input
@@ -34,6 +29,7 @@ export const YoutubeForm = () => {
 				></input>
 				<button>Submit</button>
 			</form>
+			<DevTool control={control} /> {/* Make sure it comes after <form> */}
 		</div>
 	);
 };
