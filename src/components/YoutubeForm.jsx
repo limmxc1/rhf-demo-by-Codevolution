@@ -2,21 +2,20 @@ import { useForm } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools';
 
 export const YoutubeForm = () => {
-	
-	let renderCount = 0 
-	// to prove that rhf does not cause a re-render, unlike other form state 
-	//management methods using controlled inputs (e.g. useState)
 
 	const form = useForm()
-	const { register, control } = form
+	const { register, control, handleSubmit } = form
 
-	renderCount++
+	const onSubmit = (data) => {
+		// handleSubmit passes the form data to this onSubmit function, allowing logging to console
+		console.log('Form submitted', data) 
+		// inspect browser to check data has been logged to console
+	}
+
 	return (
 		<div>
-			<h1>Youtube Form ({renderCount / 2})</h1>
-			 {/* divide 2 because React.StrictMode renders components twice 
-			 during development mode to detect issues with code */}
-			<form>
+			<h1>Youtube Form</h1>
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<label htmlFor="username">Username</label>
 				<input
 					type="text"
