@@ -7,32 +7,40 @@ export const YoutubeForm = () => {
 	const { register, control, handleSubmit } = form
 
 	const onSubmit = (data) => {
-		// handleSubmit passes the form data to this onSubmit function, allowing logging to console
 		console.log('Form submitted', data) 
-		// inspect browser to check data has been logged to console
 	}
 
 	return (
 		<div>
 			<h1>Youtube Form</h1>
-			<form onSubmit={handleSubmit(onSubmit)}>
+			<form onSubmit={handleSubmit(onSubmit)} noValidate> {/* blocks browser validation, lets rhf do the validation */}
 				<label htmlFor="username">Username</label>
 				<input
 					type="text"
 					id="username"
-					{...register("username")}
+					{...register("username", {
+						required: {
+							value: true,
+							message: "Username is required"
+						},
+					})} // examples of some of the HTML validation rules supported by rhf
 				></input>
 				<label htmlFor="email">E-mail</label>
 				<input
 					type="email"
 					id="email"
-					{...register('email')}
+					{...register('email', {
+						pattern: {
+							value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, 
+							message: 'Invalid email format',
+						},
+					})} // examples of some of the HTML validation rules supported by rhf
 				></input>
 				<label htmlFor="channel">Channel</label>
 				<input
 					type="text"
 					id="channel"
-					{...register('channel')}
+					{...register('channel', {required: "Channel is required"})}
 				></input>
 				<button>Submit</button>
 			</form>
