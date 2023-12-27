@@ -1,6 +1,10 @@
 import React from 'react';
+import { useForm } from 'react-hook-form'
 
 export const YoutubeForm = () => {
+	
+	const form = useForm() // returns a form object with many properties
+	
 	return (
 		<div>
 			<form>
