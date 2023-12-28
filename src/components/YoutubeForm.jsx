@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 
 export const YoutubeForm = () => {
@@ -12,6 +12,7 @@ export const YoutubeForm = () => {
 				facebook: '',
 			},
 			phoneNumbers: ['', ''],
+			phNumbers: [{ number: '' }],
 		},
 	});
 	const { register, control, handleSubmit, formState } = form;
@@ -20,6 +21,10 @@ export const YoutubeForm = () => {
 		console.log('Form submitted', data);
 	};
 
+	const { fields, append, remove } = useFieldArray({
+		name: 'phNumbers',
+		control,
+	}); // returns an array of fields that we can use in JSX
 	return (
 		<div>
 			<h1>Youtube Form</h1>
@@ -41,6 +46,7 @@ export const YoutubeForm = () => {
 					></input>
 					<p className="error">{errors.username?.message}</p>
 				</div>
+
 				<div className="form-control">
 					<label htmlFor="email">E-mail</label>
 					<input
@@ -69,6 +75,7 @@ export const YoutubeForm = () => {
 					></input>
 					<p className="error">{errors.email?.message}</p>
 				</div>
+
 				<div className="form-control">
 					<label htmlFor="channel">Channel</label>
 					<input
@@ -83,6 +90,7 @@ export const YoutubeForm = () => {
 					></input>
 					<p className="error">{errors.channel?.message}</p>
 				</div>
+
 				<div className="form-control">
 					<label htmlFor="twitter">Twitter</label>
 					<input
@@ -97,6 +105,7 @@ export const YoutubeForm = () => {
 					></input>
 					<p className="error">{errors.social?.twitter?.message}</p>
 				</div>
+
 				<div className="form-control">
 					<label htmlFor="facebook">Facebook</label>
 					<input
@@ -111,6 +120,7 @@ export const YoutubeForm = () => {
 					></input>
 					<p className="error">{errors.social?.facebook?.message}</p>
 				</div>
+
 				<div className="form-control">
 					<label htmlFor="primary-phone">Primary phone number</label>
 					<input
@@ -121,19 +131,17 @@ export const YoutubeForm = () => {
 								value: true,
 								message: 'Primary phone number is required',
 							},
-						})} // first array stores primary phone number
-						// dot notation is used for consistency with typescript. cannot use bracket notation
+						})}
 					></input>
 					<p className="error">{errors.phoneNumbers?.[0]?.message}</p>
 				</div>
+
 				<div className="form-control">
 					<label htmlFor="secondary-phone">Secondary phone number</label>
 					<input
 						type="text"
 						id="secondary-phone"
 						{...register('phoneNumbers.1', {
-							// dot notation is used for consistency with typescript. cannot use bracket notation
-							// second array stores secondary phone number
 							required: {
 								value: true,
 								message: 'Secondary phone number is required',
@@ -141,6 +149,39 @@ export const YoutubeForm = () => {
 						})}
 					></input>
 					<p className="error">{errors.phoneNumbers?.[1]?.message}</p>
+				</div>
+
+				<div>
+					<label>List of phone numbers</label>
+					<div>
+						{fields.map((field, index) => {
+							return (
+								<div
+									className="form-control"
+									key={field.id}
+								>
+									<input 
+										type="text"
+										{...register(`phNumbers.${index}.number`)}
+									></input>
+									{index > 0 && (
+										<button
+											type="button"
+											onClick={() => remove(index)}
+										>
+											Remove
+										</button>
+									)}
+								</div>
+							);
+						})}
+						<button
+							type="button"
+							onClick={() => append({number: ""})}
+						>
+							Add phone number
+						</button>
+					</div>
 				</div>
 				<button>Submit</button>
 			</form>
