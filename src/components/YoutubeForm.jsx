@@ -11,6 +11,7 @@ export const YoutubeForm = () => {
 				twitter: '',
 				facebook: '',
 			},
+			phoneNumbers: ['', ''],
 		},
 	});
 	const { register, control, handleSubmit, formState } = form;
@@ -87,16 +88,59 @@ export const YoutubeForm = () => {
 					<input
 						type="text"
 						id="twitter"
-						{...register('social.twitter')}
+						{...register('social.twitter', {
+							required: {
+								value: true,
+								message: 'Twitter account is required',
+							},
+						})}
 					></input>
+					<p className="error">{errors.social?.twitter?.message}</p>
 				</div>
 				<div className="form-control">
 					<label htmlFor="facebook">Facebook</label>
 					<input
 						type="text"
 						id="facebook"
-						{...register('social.facebook')}
+						{...register('social.facebook', {
+							required: {
+								value: true,
+								message: 'Facebook account is required',
+							},
+						})}
 					></input>
+					<p className="error">{errors.social?.facebook?.message}</p>
+				</div>
+				<div className="form-control">
+					<label htmlFor="primary-phone">Primary phone number</label>
+					<input
+						type="text"
+						id="primary-phone"
+						{...register('phoneNumbers.0', {
+							required: {
+								value: true,
+								message: 'Primary phone number is required',
+							},
+						})} // first array stores primary phone number
+						// dot notation is used for consistency with typescript. cannot use bracket notation
+					></input>
+					<p className="error">{errors.phoneNumbers?.[0]?.message}</p>
+				</div>
+				<div className="form-control">
+					<label htmlFor="secondary-phone">Secondary phone number</label>
+					<input
+						type="text"
+						id="secondary-phone"
+						{...register('phoneNumbers.1', {
+							// dot notation is used for consistency with typescript. cannot use bracket notation
+							// second array stores secondary phone number
+							required: {
+								value: true,
+								message: 'Secondary phone number is required',
+							},
+						})}
+					></input>
+					<p className="error">{errors.phoneNumbers?.[1]?.message}</p>
 				</div>
 				<button>Submit</button>
 			</form>
