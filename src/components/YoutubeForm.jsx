@@ -13,6 +13,8 @@ export const YoutubeForm = () => {
 			},
 			phoneNumbers: ['', ''],
 			phNumbers: [{ number: '' }],
+			age: 0,
+			dob: new Date()
 		},
 	});
 	const { register, control, handleSubmit, formState } = form;
@@ -24,7 +26,7 @@ export const YoutubeForm = () => {
 	const { fields, append, remove } = useFieldArray({
 		name: 'phNumbers',
 		control,
-	}); // returns an array of fields that we can use in JSX
+	});
 	return (
 		<div>
 			<h1>Youtube Form</h1>
@@ -89,6 +91,38 @@ export const YoutubeForm = () => {
 						})}
 					></input>
 					<p className="error">{errors.channel?.message}</p>
+				</div>
+
+				<div className="form-control">
+					<label htmlFor="age">Age</label>
+					<input
+						type="number" // However, the form state still returns a string instead of number
+						id="age"
+						{...register('age', {
+							valueAsNumber: true, // So we need to add this prop to return a number
+							required: {
+								value: true,
+								message: 'Age is required',
+							},
+						})}
+					></input>
+					<p className="error">{errors.age?.message}</p>
+				</div>
+
+				<div className="form-control">
+					<label htmlFor="dob">Date of Birth</label>
+					<input
+						type="date" // However, the form state returns a string instead of date value
+						id="dob"
+						{...register('dob', {
+							valueAsDate: true, // So we need to add this prop to return a date value
+							required: {
+								value: true,
+								message: 'Date of birth is required',
+							},
+						})}
+					></input>
+					<p className="error">{errors.dob?.message}</p>
 				</div>
 
 				<div className="form-control">
