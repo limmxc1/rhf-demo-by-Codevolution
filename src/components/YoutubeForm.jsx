@@ -1,62 +1,82 @@
-import { useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 
 export const YoutubeForm = () => {
-
-	const form = useForm()
-	const { register, control, handleSubmit, formState } = form 
-	const { errors } = formState
+	const form = useForm({
+		{/*
+			defaultValues: {
+				username: 'Batman',
+				email: '',
+				channel: '',
+			}, 
+		*/}
+		// populating defaultValues with hard-coded data
+		defaultValues: async () => {
+			const response = await fetch('https://jsonplaceholder.typicode.com/users/1');
+			const data = await response.json();
+			return {
+				username: 'Batman',
+				email: data.email,
+				channel: '',
+			};
+		}, // populating defaultValues with data from external API
+	});
+	const { register, control, handleSubmit, formState } = form;
+	const { errors } = formState;
 	const onSubmit = (data) => {
-		console.log('Form submitted', data) 
-	}
+		console.log('Form submitted', data);
+	};
 
 	return (
 		<div>
 			<h1>Youtube Form</h1>
-			<form onSubmit={handleSubmit(onSubmit)} noValidate>
-				<div className='form-control'>
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				noValidate
+			>
+				<div className="form-control">
 					<label htmlFor="username">Username</label>
 					<input
 						type="text"
 						id="username"
-						{...register("username", {
+						{...register('username', {
 							required: {
 								value: true,
-								message: "Username is required"
+								message: 'Username is required',
 							},
-						})} 
+						})}
 					></input>
 					<p className="error">{errors.username?.message}</p>
 				</div>
-				<div className='form-control'>
+				<div className="form-control">
 					<label htmlFor="email">E-mail</label>
 					<input
 						type="email"
 						id="email"
 						{...register('email', {
 							pattern: {
-								value: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/, 
+								value:
+									/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
 								message: 'Invalid email format',
 							},
-							validate: { // enables writing of custom validation
-								notAdmin: (fieldValue) => { // automatically receives 'fieldValue' as the argument
+							validate: {
+								notAdmin: (fieldValue) => {
 									return (
-										fieldValue !== 'admin@example' ||
-										"Enter a different email address"
+										fieldValue !== 'admin@example' || 'Enter a different email address'
 									);
 								},
-								notBlackListed: (fieldValue) => { // automatically receives 'fieldValue' as the argument
+								notBlackListed: (fieldValue) => {
 									return (
-										!fieldValue.endsWith('baddomain.com') || 
-										"This domain is not supported"
-									)
-								}
-							} // 1 custom rule = pass function, >1 custom rule = pass object
+										!fieldValue.endsWith('baddomain.com') ||
+										'This domain is not supported'
+									);
+								},
+							},
 						})}
 					></input>
 					<p className="error">{errors.email?.message}</p>
 				</div>
-				<div className='form-control'>
+				<div className="form-control">
 					<label htmlFor="channel">Channel</label>
 					<input
 						type="text"
@@ -64,7 +84,7 @@ export const YoutubeForm = () => {
 						{...register('channel', {
 							required: {
 								value: true,
-								message: "Channel is required"
+								message: 'Channel is required',
 							},
 						})}
 					></input>
