@@ -3,23 +3,15 @@ import { DevTool } from '@hookform/devtools';
 
 export const YoutubeForm = () => {
 	const form = useForm({
-		{/*
-			defaultValues: {
-				username: 'Batman',
-				email: '',
-				channel: '',
-			}, 
-		*/}
-		// populating defaultValues with hard-coded data
-		defaultValues: async () => {
-			const response = await fetch('https://jsonplaceholder.typicode.com/users/1');
-			const data = await response.json();
-			return {
-				username: 'Batman',
-				email: data.email,
-				channel: '',
-			};
-		}, // populating defaultValues with data from external API
+		defaultValues: {
+			username: 'Batman',
+			email: '',
+			channel: '',
+			social: {
+				twitter: '',
+				facebook: '',
+			},
+		},
 	});
 	const { register, control, handleSubmit, formState } = form;
 	const { errors } = formState;
@@ -89,6 +81,22 @@ export const YoutubeForm = () => {
 						})}
 					></input>
 					<p className="error">{errors.channel?.message}</p>
+				</div>
+				<div className="form-control">
+					<label htmlFor="twitter">Twitter</label>
+					<input
+						type="text"
+						id="twitter"
+						{...register('social.twitter')}
+					></input>
+				</div>
+				<div className="form-control">
+					<label htmlFor="facebook">Facebook</label>
+					<input
+						type="text"
+						id="facebook"
+						{...register('social.facebook')}
+					></input>
 				</div>
 				<button>Submit</button>
 			</form>
