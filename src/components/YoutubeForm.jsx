@@ -34,7 +34,16 @@ export const YoutubeForm = () => {
 		control,
 	});
 
-	const { errors } = formState;
+	const { errors, touchedFields, dirtyFields, isDirty } = formState;
+	// to check all fields and returns an object with status of all fields included
+	console.log(touchedFields);
+	console.log(dirtyFields)
+	// to check specific field
+	console.log(touchedFields.username);
+	console.log(dirtyFields.email);
+	// to check all fields and return a true/false as long as a field is dirty/touched
+	console.log(isDirty)
+
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
 	};
@@ -43,14 +52,11 @@ export const YoutubeForm = () => {
 		console.log('Get values', getValues(['username', 'channel']));
 	};
 	const handleSetValue = () => {
-		setValue('username', '', { // turns 'username' field into empty string
-			// note that it does not change the 'touched' and 'dirty' states. 
+		setValue('username', '', {
 			shouldValidate: true,
 			shouldDirty: true,
 			shouldTouch: true,
-			// adding these 3 props will change the 'touched' and 'dirty' states when using setValue()
-		}) 
-		
+		});
 	};
 
 	renderCount++;
@@ -245,10 +251,16 @@ export const YoutubeForm = () => {
 					</div>
 				</div>
 				<button>Submit</button>
-				<button type="button" onClick={handleGetValues}>
+				<button
+					type="button"
+					onClick={handleGetValues}
+				>
 					Get values
 				</button>
-				<button type="button" onClick={handleSetValue}>
+				<button
+					type="button"
+					onClick={handleSetValue}
+				>
 					Set value
 				</button>
 			</form>
