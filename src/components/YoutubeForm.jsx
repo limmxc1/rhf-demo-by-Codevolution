@@ -35,14 +35,6 @@ export const YoutubeForm = () => {
 	});
 
 	const { errors, touchedFields, dirtyFields, isDirty } = formState;
-	// to check all fields and returns an object with status of all fields included
-	console.log(touchedFields);
-	console.log(dirtyFields)
-	// to check specific field
-	console.log(touchedFields.username);
-	console.log(dirtyFields.email);
-	// to check all fields and return a true/false as long as a field is dirty/touched
-	console.log(isDirty)
 
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
@@ -72,6 +64,7 @@ export const YoutubeForm = () => {
 					<input
 						type="text"
 						id="username"
+						disabled // traditional way in HTML. Cannot type in this field anymore
 						{...register('username', {
 							required: {
 								value: true,
@@ -164,10 +157,10 @@ export const YoutubeForm = () => {
 						type="text"
 						id="twitter"
 						{...register('social.twitter', {
-							required: {
-								value: true,
-								message: 'Twitter account is required',
-							},
+							required: 'Twitter account is required', 
+							// no validation message will be flagged in rhf dev tools even if 'required' validation was set
+							disabled: watch("channel") === "", // conditonally disabling depending on whether 'channel' field has a value
+							// rhf way of disabling field. will return 'undefined' for twitter's field value
 						})}
 					></input>
 					<p className="error">{errors.social?.twitter?.message}</p>
