@@ -20,25 +20,37 @@ export const YoutubeForm = () => {
 			dob: new Date(),
 		},
 	});
-	const { register, control, handleSubmit, formState, watch, getValues } = form;
+	const {
+		register,
+		control,
+		handleSubmit,
+		formState,
+		watch,
+		getValues,
+		setValue,
+	} = form;
 	const { fields, append, remove } = useFieldArray({
 		name: 'phNumbers',
 		control,
 	});
 
 	const { errors } = formState;
-	// watch() => used when you need to track every change right after it happens (i.e. after every keystroke from user)
-	// getValues() => used when you only need to track the final change (i.e. when user finishes input and press 'Submit' button)
-	// Benefit of getValues() over watch(): does not cause frequent re-renders
-
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
 	};
 
 	const handleGetValues = () => {
-		// console.log("Get values", getValues()); // getting the entire form's values as an object
-		// console.log("Get values", getValues('social.twitter')) // getting a single value
-		console.log("Get values", getValues(['username', 'channel'])) // getting multiple values and storing them in an array
+		console.log('Get values', getValues(['username', 'channel']));
+	};
+	const handleSetValue = () => {
+		setValue('username', '', { // turns 'username' field into empty string
+			// note that it does not change the 'touched' and 'dirty' states. 
+			shouldValidate: true,
+			shouldDirty: true,
+			shouldTouch: true,
+			// adding these 3 props will change the 'touched' and 'dirty' states when using setValue()
+		}) 
+		
 	};
 
 	renderCount++;
@@ -233,11 +245,11 @@ export const YoutubeForm = () => {
 					</div>
 				</div>
 				<button>Submit</button>
-				<button
-					type="button"
-					onClick={handleGetValues}
-				>
+				<button type="button" onClick={handleGetValues}>
 					Get values
+				</button>
+				<button type="button" onClick={handleSetValue}>
+					Set value
 				</button>
 			</form>
 			<DevTool control={control} />
