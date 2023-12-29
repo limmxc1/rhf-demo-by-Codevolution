@@ -20,37 +20,31 @@ export const YoutubeForm = () => {
 			dob: new Date(),
 		},
 	});
-	const { register, control, handleSubmit, formState, watch } = form;
-	// const watchUsername = watch('username'); // watching a single field
-	// const watchUsername = watch(['username', 'email']) // watching multiple fields
-	const watchForm = watch(); // watch all fields in form
-	useEffect(() => { // writing watch() as a callback function 
-		//i.e. if you want to perform side effect after watching a value
-		const subscription = watch((value) => {
-			// receives updated form values as argument
-			console.log(value);
-		});
-		return () => subscription.unsubscribe;
-		// watch() is a subscription to changes in form value, so need to unsubscribe
-	}, [watch]);
-	// benefit: component does not re-render. 
-	// allows you to check any field and carry out a side effect whenever the field changes 
-	const { errors } = formState;
-	const onSubmit = (data) => {
-		console.log('Form submitted', data);
-	};
-
+	const { register, control, handleSubmit, formState, watch, getValues } = form;
 	const { fields, append, remove } = useFieldArray({
 		name: 'phNumbers',
 		control,
 	});
 
+	const { errors } = formState;
+	// watch() => used when you need to track every change right after it happens (i.e. after every keystroke from user)
+	// getValues() => used when you only need to track the final change (i.e. when user finishes input and press 'Submit' button)
+	// Benefit of getValues() over watch(): does not cause frequent re-renders
+
+	const onSubmit = (data) => {
+		console.log('Form submitted', data);
+	};
+
+	const handleGetValues = () => {
+		// console.log("Get values", getValues()); // getting the entire form's values as an object
+		// console.log("Get values", getValues('social.twitter')) // getting a single value
+		console.log("Get values", getValues(['username', 'channel'])) // getting multiple values and storing them in an array
+	};
+
 	renderCount++;
 	return (
 		<div>
-			<h1>Youtube Form ({renderCount/2})</h1>
-			<h2>Watched value: {JSON.stringify(watchForm)}</h2>
-			{/* need to stringify first before passing an object into JSX*/}
+			<h1>Youtube Form ({renderCount / 2})</h1>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				noValidate
@@ -239,6 +233,12 @@ export const YoutubeForm = () => {
 					</div>
 				</div>
 				<button>Submit</button>
+				<button
+					type="button"
+					onClick={handleGetValues}
+				>
+					Get values
+				</button>
 			</form>
 			<DevTool control={control} />
 		</div>
