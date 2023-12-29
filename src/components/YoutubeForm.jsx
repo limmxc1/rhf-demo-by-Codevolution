@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
+
+let renderCount = 0;
 
 export const YoutubeForm = () => {
 	const form = useForm({
@@ -14,10 +17,24 @@ export const YoutubeForm = () => {
 			phoneNumbers: ['', ''],
 			phNumbers: [{ number: '' }],
 			age: 0,
-			dob: new Date()
+			dob: new Date(),
 		},
 	});
-	const { register, control, handleSubmit, formState } = form;
+	const { register, control, handleSubmit, formState, watch } = form;
+	// const watchUsername = watch('username'); // watching a single field
+	// const watchUsername = watch(['username', 'email']) // watching multiple fields
+	const watchForm = watch(); // watch all fields in form
+	useEffect(() => { // writing watch() as a callback function 
+		//i.e. if you want to perform side effect after watching a value
+		const subscription = watch((value) => {
+			// receives updated form values as argument
+			console.log(value);
+		});
+		return () => subscription.unsubscribe;
+		// watch() is a subscription to changes in form value, so need to unsubscribe
+	}, [watch]);
+	// benefit: component does not re-render. 
+	// allows you to check any field and carry out a side effect whenever the field changes 
 	const { errors } = formState;
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
@@ -27,9 +44,13 @@ export const YoutubeForm = () => {
 		name: 'phNumbers',
 		control,
 	});
+
+	renderCount++;
 	return (
 		<div>
-			<h1>Youtube Form</h1>
+			<h1>Youtube Form ({renderCount/2})</h1>
+			<h2>Watched value: {JSON.stringify(watchForm)}</h2>
+			{/* need to stringify first before passing an object into JSX*/}
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				noValidate
@@ -96,10 +117,10 @@ export const YoutubeForm = () => {
 				<div className="form-control">
 					<label htmlFor="age">Age</label>
 					<input
-						type="number" // However, the form state still returns a string instead of number
+						type="number"
 						id="age"
 						{...register('age', {
-							valueAsNumber: true, // So we need to add this prop to return a number
+							valueAsNumber: true,
 							required: {
 								value: true,
 								message: 'Age is required',
@@ -112,10 +133,10 @@ export const YoutubeForm = () => {
 				<div className="form-control">
 					<label htmlFor="dob">Date of Birth</label>
 					<input
-						type="date" // However, the form state returns a string instead of date value
+						type="date"
 						id="dob"
 						{...register('dob', {
-							valueAsDate: true, // So we need to add this prop to return a date value
+							valueAsDate: true,
 							required: {
 								value: true,
 								message: 'Date of birth is required',
@@ -194,7 +215,7 @@ export const YoutubeForm = () => {
 									className="form-control"
 									key={field.id}
 								>
-									<input 
+									<input
 										type="text"
 										{...register(`phNumbers.${index}.number`)}
 									></input>
@@ -211,7 +232,7 @@ export const YoutubeForm = () => {
 						})}
 						<button
 							type="button"
-							onClick={() => append({number: ""})}
+							onClick={() => append({ number: '' })}
 						>
 							Add phone number
 						</button>
