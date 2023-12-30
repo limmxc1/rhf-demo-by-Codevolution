@@ -19,6 +19,13 @@ export const YoutubeForm = () => {
 			age: 0,
 			dob: new Date(),
 		},
+		// configures when the form validation will occur by default
+		// mode: 'all' // validation occurs when user focuses, blurs, or making changes to a field
+		// mode: 'onSubmit' // this is the default configuration
+		// mode: 'onFocus' // validation occurs when user focuses on a field
+		// mode: 'onChange// validation occurs as user is making changes to a field
+		mode: 'onBlur' // validation occurs when user switch focus to another field. The previous field is said to be 'blurred'
+		
 	});
 
 	const {
@@ -47,6 +54,8 @@ export const YoutubeForm = () => {
 		isSubmitSuccessful,
 		submitCount,
 	} = formState;
+
+	console.log({ isSubmitting, isSubmitted, isSubmitSuccessful, submitCount })
 
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
