@@ -35,27 +35,38 @@ export const YoutubeForm = () => {
 		control,
 	});
 
-	const { errors, touchedFields, dirtyFields, isDirty, isValid } = formState;
+	const {
+		errors,
+		touchedFields,
+		dirtyFields,
+		isDirty,
+		isValid,
+		isSubmitting,
+		isSubmitted,
+		isSubmitSuccessful,
+		submitCount,
+	} = formState;
 
-	// to check all fields and returns an object with status of all fields included
-	console.log(touchedFields);
-	console.log(dirtyFields)
-	// to check specific field
-	console.log(touchedFields.username);
-	console.log(dirtyFields.email);
-	// to check all fields and return a true/false as long as one field is dirty
-	console.log(isDirty)
-	// to check all fields and return a true/false as long as all fields are valid
-	console.log(isValid)
-
+	// tracks if a form is in the process of submission
+	// returns 'false' before and after submitting, returns 'true' when submitting
+	// useful to disable 'Submit' button to prevent multiple submissions
+	console.log('isSubmitting: ' + isSubmitting);
+	// tracks if a form has been submitted
+	// returns 'false' before submitting, returns 'true' after submit and remains true until form is reset
+	console.log('isSubmitted: ' + isSubmitted);
+	// tracks if a form has been submitted successfully
+	// returns 'false' before submitting, returns 'true' after submit is successful
+	console.log('isSubmitSuccessful: ' + isSubmitSuccessful);
+	// tracks number of times submit
+	console.log('submitCount: ' + submitCount);
 
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
 	};
 
 	const onError = (errors) => {
-		console.log("Form errors", errors)
-	} 
+		console.log('Form errors', errors);
+	};
 
 	const handleGetValues = () => {
 		console.log('Get values', getValues(['username', 'channel']));
@@ -74,7 +85,7 @@ export const YoutubeForm = () => {
 		<div>
 			<h1>Youtube Form ({renderCount / 2})</h1>
 			<form
-				onSubmit={handleSubmit(onSubmit, onError)} 
+				onSubmit={handleSubmit(onSubmit, onError)}
 				noValidate
 			>
 				<div className="form-control">
@@ -175,8 +186,8 @@ export const YoutubeForm = () => {
 						type="text"
 						id="twitter"
 						{...register('social.twitter', {
-							required: 'Twitter account is required', 
-							disabled: watch("channel") === "", 
+							required: 'Twitter account is required',
+							disabled: watch('channel') === '',
 						})}
 					></input>
 					<p className="error">{errors.social?.twitter?.message}</p>
@@ -259,17 +270,16 @@ export const YoutubeForm = () => {
 						</button>
 					</div>
 				</div>
-				<button
-					disabled={!isDirty || !isValid} 
-					// recall that these two checks the entire form, rather than single fields
-					// (i.e. touchedFields and dirtyFields)
-				>Submit</button>
+
+				<button disabled={!isDirty || !isValid || isSubmitting}>Submit</button>
+
 				<button
 					type="button"
 					onClick={handleGetValues}
 				>
 					Get values
 				</button>
+
 				<button
 					type="button"
 					onClick={handleSetValue}
