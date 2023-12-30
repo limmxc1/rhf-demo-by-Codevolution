@@ -71,12 +71,8 @@ export const YoutubeForm = () => {
 	useEffect(() => {
 		if (isSubmitSuccessful) {
 			reset();
-			// field values are reset back to their defaultValues if no arguments passed in
-
 		}
 	}, [isSubmitSuccessful]);
-	// not recommended to use reset() in the onSubmit event listener
-	// reset() also resets the 'dirty' and 'touched' states
 
 	renderCount++;
 	return (
@@ -124,6 +120,16 @@ export const YoutubeForm = () => {
 										!fieldValue.endsWith('baddomain.com') ||
 										'This domain is not supported'
 									);
+								},
+								emailAvailable: async (fieldValue) => {
+									// 'fieldValue' is automatically passed as argument
+									const response = await fetch(
+										`https://jsonplaceholder.typicode.com/users?email=${fieldValue}`,
+									);
+									// checks the jsonplaceholder API for whether it has the input email in its database already
+									// if yes, it will produce the 'Email already exists' error message
+									const data = await response.json();
+									return data.length == 0 || 'Email already exists';
 								},
 							},
 						})}
@@ -269,22 +275,19 @@ export const YoutubeForm = () => {
 					</div>
 				</div>
 
-				<button disabled={!isDirty || !isValid || isSubmitting}>Submit</button>
+				<button disabled={!isDirty || isSubmitting}>Submit</button>
 
 				<button
 					type="button"
 					onClick={() =>
 						reset(
-							// accepts two optional objects. 
-							// The first is to specify what value each field should have after reset
 							{
 								username: 'hello',
 								email: 'limmxc1@gmail.com',
 							},
-							// The second is to specify what field/states to preserve
 							{
-								keepTouched: true // prevents reset() from changing the 'touched' state
-								keepDirty: true // prevents reset() from changing the 'dirty' state
+								keepTouched: true,
+								keepDirty: true,
 							},
 						)
 					}
