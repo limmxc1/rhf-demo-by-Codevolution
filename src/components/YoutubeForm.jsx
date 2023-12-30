@@ -40,9 +40,16 @@ export const YoutubeForm = () => {
 		console.log('Form submitted', data);
 	};
 
+	const onError = (errors) => {
+		console.log("Form errors", errors)
+	} 
+	// returns an object with all the fields that have an error
+	// includes error type and error message
+
 	const handleGetValues = () => {
 		console.log('Get values', getValues(['username', 'channel']));
 	};
+
 	const handleSetValue = () => {
 		setValue('username', '', {
 			shouldValidate: true,
@@ -56,7 +63,9 @@ export const YoutubeForm = () => {
 		<div>
 			<h1>Youtube Form ({renderCount / 2})</h1>
 			<form
-				onSubmit={handleSubmit(onSubmit)}
+				onSubmit={handleSubmit(onSubmit, onError)} 
+				// 'handleSubmit' is used instead of just 'onSubmit' because it accepts a second 
+				// onError argument that is called when form submission fails
 				noValidate
 			>
 				<div className="form-control">
@@ -64,7 +73,7 @@ export const YoutubeForm = () => {
 					<input
 						type="text"
 						id="username"
-						disabled // traditional way in HTML. Cannot type in this field anymore
+						disabled
 						{...register('username', {
 							required: {
 								value: true,
@@ -158,9 +167,7 @@ export const YoutubeForm = () => {
 						id="twitter"
 						{...register('social.twitter', {
 							required: 'Twitter account is required', 
-							// no validation message will be flagged in rhf dev tools even if 'required' validation was set
-							disabled: watch("channel") === "", // conditonally disabling depending on whether 'channel' field has a value
-							// rhf way of disabling field. will return 'undefined' for twitter's field value
+							disabled: watch("channel") === "", 
 						})}
 					></input>
 					<p className="error">{errors.social?.twitter?.message}</p>
