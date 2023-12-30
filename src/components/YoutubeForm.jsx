@@ -20,6 +20,7 @@ export const YoutubeForm = () => {
 			dob: new Date(),
 		},
 	});
+
 	const {
 		register,
 		control,
@@ -34,7 +35,19 @@ export const YoutubeForm = () => {
 		control,
 	});
 
-	const { errors, touchedFields, dirtyFields, isDirty } = formState;
+	const { errors, touchedFields, dirtyFields, isDirty, isValid } = formState;
+
+	// to check all fields and returns an object with status of all fields included
+	console.log(touchedFields);
+	console.log(dirtyFields)
+	// to check specific field
+	console.log(touchedFields.username);
+	console.log(dirtyFields.email);
+	// to check all fields and return a true/false as long as one field is dirty
+	console.log(isDirty)
+	// to check all fields and return a true/false as long as all fields are valid
+	console.log(isValid)
+
 
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
@@ -43,8 +56,6 @@ export const YoutubeForm = () => {
 	const onError = (errors) => {
 		console.log("Form errors", errors)
 	} 
-	// returns an object with all the fields that have an error
-	// includes error type and error message
 
 	const handleGetValues = () => {
 		console.log('Get values', getValues(['username', 'channel']));
@@ -64,8 +75,6 @@ export const YoutubeForm = () => {
 			<h1>Youtube Form ({renderCount / 2})</h1>
 			<form
 				onSubmit={handleSubmit(onSubmit, onError)} 
-				// 'handleSubmit' is used instead of just 'onSubmit' because it accepts a second 
-				// onError argument that is called when form submission fails
 				noValidate
 			>
 				<div className="form-control">
@@ -250,7 +259,11 @@ export const YoutubeForm = () => {
 						</button>
 					</div>
 				</div>
-				<button>Submit</button>
+				<button
+					disabled={!isDirty || !isValid} 
+					// recall that these two checks the entire form, rather than single fields
+					// (i.e. touchedFields and dirtyFields)
+				>Submit</button>
 				<button
 					type="button"
 					onClick={handleGetValues}
