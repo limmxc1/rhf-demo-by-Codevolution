@@ -29,6 +29,7 @@ export const YoutubeForm = () => {
 		watch,
 		getValues,
 		setValue,
+		reset,
 	} = form;
 	const { fields, append, remove } = useFieldArray({
 		name: 'phNumbers',
@@ -46,19 +47,6 @@ export const YoutubeForm = () => {
 		isSubmitSuccessful,
 		submitCount,
 	} = formState;
-
-	// tracks if a form is in the process of submission
-	// returns 'false' before and after submitting, returns 'true' when submitting
-	// useful to disable 'Submit' button to prevent multiple submissions
-	console.log('isSubmitting: ' + isSubmitting);
-	// tracks if a form has been submitted
-	// returns 'false' before submitting, returns 'true' after submit and remains true until form is reset
-	console.log('isSubmitted: ' + isSubmitted);
-	// tracks if a form has been submitted successfully
-	// returns 'false' before submitting, returns 'true' after submit is successful
-	console.log('isSubmitSuccessful: ' + isSubmitSuccessful);
-	// tracks number of times submit
-	console.log('submitCount: ' + submitCount);
 
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
@@ -79,6 +67,16 @@ export const YoutubeForm = () => {
 			shouldTouch: true,
 		});
 	};
+
+	useEffect(() => {
+		if (isSubmitSuccessful) {
+			reset();
+			// field values are reset back to their defaultValues if no arguments passed in
+
+		}
+	}, [isSubmitSuccessful]);
+	// not recommended to use reset() in the onSubmit event listener
+	// reset() also resets the 'dirty' and 'touched' states
 
 	renderCount++;
 	return (
@@ -272,6 +270,27 @@ export const YoutubeForm = () => {
 				</div>
 
 				<button disabled={!isDirty || !isValid || isSubmitting}>Submit</button>
+
+				<button
+					type="button"
+					onClick={() =>
+						reset(
+							// accepts two optional objects. 
+							// The first is to specify what value each field should have after reset
+							{
+								username: 'hello',
+								email: 'limmxc1@gmail.com',
+							},
+							// The second is to specify what field/states to preserve
+							{
+								keepTouched: true // prevents reset() from changing the 'touched' state
+								keepDirty: true // prevents reset() from changing the 'dirty' state
+							},
+						)
+					}
+				>
+					Reset
+				</button>
 
 				<button
 					type="button"
