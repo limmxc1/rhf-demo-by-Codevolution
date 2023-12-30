@@ -19,13 +19,7 @@ export const YoutubeForm = () => {
 			age: 0,
 			dob: new Date(),
 		},
-		// configures when the form validation will occur by default
-		// mode: 'all' // validation occurs when user focuses, blurs, or making changes to a field
-		// mode: 'onSubmit' // this is the default configuration
-		// mode: 'onFocus' // validation occurs when user focuses on a field
-		// mode: 'onChange// validation occurs as user is making changes to a field
-		mode: 'onBlur' // validation occurs when user switch focus to another field. The previous field is said to be 'blurred'
-		
+		mode: 'onSubmit',
 	});
 
 	const {
@@ -37,6 +31,7 @@ export const YoutubeForm = () => {
 		getValues,
 		setValue,
 		reset,
+		trigger,
 	} = form;
 	const { fields, append, remove } = useFieldArray({
 		name: 'phNumbers',
@@ -55,7 +50,7 @@ export const YoutubeForm = () => {
 		submitCount,
 	} = formState;
 
-	console.log({ isSubmitting, isSubmitted, isSubmitSuccessful, submitCount })
+	console.log({ isSubmitting, isSubmitted, isSubmitSuccessful, submitCount });
 
 	const onSubmit = (data) => {
 		console.log('Form submitted', data);
@@ -131,12 +126,9 @@ export const YoutubeForm = () => {
 									);
 								},
 								emailAvailable: async (fieldValue) => {
-									// 'fieldValue' is automatically passed as argument
 									const response = await fetch(
 										`https://jsonplaceholder.typicode.com/users?email=${fieldValue}`,
 									);
-									// checks the jsonplaceholder API for whether it has the input email in its database already
-									// if yes, it will produce the 'Email already exists' error message
 									const data = await response.json();
 									return data.length == 0 || 'Email already exists';
 								},
@@ -316,6 +308,17 @@ export const YoutubeForm = () => {
 					onClick={handleSetValue}
 				>
 					Set value
+				</button>
+
+				<button
+					type="button"
+					onClick={() => 
+						trigger() // triggers all validations in all fields when clicked
+						// trigger("channel") // triggers the 'channel' field only
+						// trigger(['social.facebook', 'channel']) // triggers multiple fields
+					} 
+				>
+					Validate
 				</button>
 			</form>
 			<DevTool control={control} />
